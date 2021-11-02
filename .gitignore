@@ -1,0 +1,14 @@
+.php_cs
+.php_cs.cache
+.phpunit.result.cache
+/phpunit.xml
+/phpstan.neon
+
+/composer.lock
+/vendor/
+/tmp/
+
+/.idea
+/.settings
+/.vscode
+/.project

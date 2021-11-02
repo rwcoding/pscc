@@ -1,0 +1,41 @@
+{
+    "name": "rwcoding/pscc",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "zszyue",
+            "email": "zszyue@qq.com"
+        }
+    ],
+
+    "require": {
+        "ext-json": "*",
+        "filp/whoops": "^2.14",
+        "illuminate/validation": "^8.68",
+        "illuminate/translation": "^8.68",
+        "illuminate/filesystem": "^8.68",
+        "monolog/monolog": "^2.3",
+        "symfony/var-dumper": "^5.3"
+    },
+
+    "require-dev": {
+        "swoole/ide-helper": "@dev",
+        "phpunit/phpunit": "^9.5",
+        "phpbench/phpbench": "^1.1",
+        "illuminate/database": "^8.68"
+    },
+
+    "autoload": {
+        "psr-4": {
+            "Rwcoding\\Pscc\\": "src/"
+        }
+    },
+
+    "autoload-dev": {
+        "psr-4": {
+            "Rwcoding\\Tests\\Pscc\\": "tests/",
+            "Rwcoding\\Examples\\Pscc\\": "examples/src/"
+        }
+    }
+}
