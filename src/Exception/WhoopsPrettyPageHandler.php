@@ -11,13 +11,11 @@ class WhoopsPrettyPageHandler implements ExceptionHandlerInterface
         $whoops->allowQuit(false);
         $whoops->writeToOutput(false);
         $handler = new \Whoops\Handler\PrettyPageHandler();
-        $whoops->pushHandler($handler);
         if (PHP_SAPI === "cli") {
             $handler->handleUnconditionally(true);
-            return $whoops->handleException($exception);
         }
-        $whoops->handleException($exception);
-        return null;
+        $whoops->pushHandler($handler);
+        return $whoops->handleException($exception);
     }
 
     public function isBreak(): bool

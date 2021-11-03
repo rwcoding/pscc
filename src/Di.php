@@ -22,6 +22,7 @@ use Illuminate\Translation\Translator;
  * @property ExceptionHandle $exception
  * @property Translator $translator
  * @property Validator $validator
+ * @property \Swoole\Server|\Swoole\Http\Server $ss
  */
 class Di extends Container
 {
@@ -98,5 +99,20 @@ class Di extends Container
                 $this->set($key, $value);
             }
         }
+    }
+
+    public static function inWeb(): bool
+    {
+        return defined("PSCC_IN_HTTP") || PHP_SAPI != "cli";
+    }
+
+    public static function inCli(): bool
+    {
+        return !defined("PSCC_IN_HTTP") || PHP_SAPI == "cli";
+    }
+
+    public static function inConsole(): bool
+    {
+        return PHP_SAPI == "cli";
     }
 }

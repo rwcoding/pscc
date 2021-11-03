@@ -2,7 +2,9 @@
 
 namespace Rwcoding\Pscc\Core\Web;
 
-class Response
+use Rwcoding\Pscc\Core\ResponseInterface;
+
+class Response implements ResponseInterface
 {
     use ResponseTrait;
 
@@ -27,6 +29,11 @@ class Response
             foreach ($this->headers as $k => $v) {
                 header(ucfirst($k) . ': ' . $v);
             }
+        }
+
+        if ($this->render) {
+            echo call_user_func($this->render, $this->body);
+            return;
         }
 
         if (is_array($this->body)) {

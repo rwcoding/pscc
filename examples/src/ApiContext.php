@@ -3,6 +3,7 @@
 namespace Rwcoding\Examples\Pscc;
 
 use Rwcoding\Pscc\Core\Context;
+use Rwcoding\Pscc\Di;
 
 /**
  * @property array $data
@@ -20,12 +21,12 @@ class ApiContext extends Context
             $this->data = $this->request->getFlags();
         } else {
             if ($this->request->isGet()) {
-                $this->command = substr($this->request->getPathInfo(),1);
+                $this->command = substr($this->request->getPathInfo(),1) ?: "help";
                 $this->data = $this->request->getQueries();
             }
             if ($this->request->isPost()) {
                 $this->data = json_decode($this->request->getBody(), true);
-                $this->command = $this->data["cmd"] ?? "";
+                $this->command = $this->data["cmd"] ?? "help";
             }
         }
     }
@@ -47,16 +48,20 @@ class ApiContext extends Context
 
     public function emitResponse()
     {
-        if (PHP_SAPI == "cli") {
-            $this->response->setRender(function ($body) {
-                echo str_repeat("·",100)."\n";
-                echo "[command] ".$this->command."\n";
-                echo "   [data] ".json_encode($this->data, JSON_UNESCAPED_UNICODE)."\n";
-                echo " [result] ".json_encode($body, JSON_UNESCAPED_UNICODE)."\n";
-                echo str_repeat("·",100)."\n";
-            })->send();
-        } else {
+        if (Di::inWeb()) {
+            if (!$this->response->hasHeader('Content-Type')) {
+                $this->response->addHeader("Content-Type", "application/json");
+            }
             $this->response->send();
+        } else {
+            $this->response->setRender(function ($body) {
+                $text  = str_repeat("·",100)."\n";
+                $text .= "[command] ".$this->command."\n";
+                $text .= "   [data] ".json_encode($this->data, JSON_UNESCAPED_UNICODE)."\n";
+                $text .= " [result] ".json_encode($body, JSON_UNESCAPED_UNICODE)."\n";
+                $text .= str_repeat("·",100)."\n";
+                return $text;
+            })->send();
         }
     }
 }

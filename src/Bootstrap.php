@@ -32,13 +32,21 @@ class Bootstrap
         $this->server->start();
     }
 
-    public function asHttp(EventInterface $event)
+    public function register(EventInterface $event)
     {
         define("PSCC_IN_SWOOLE", true);
         define("PSCC_IN_SERVER", true);
         $setting = $this->conf->getSwoole();
-        $host = $setting['host'] ?? "127.0.0.1";
-        $port = isset($setting['port']) ? (int)$setting['port'] : 8080;
+        $host = !empty($setting['host']) ? $setting['host'] : "127.0.0.1";
+        $port = !empty($setting['port']) ? (int)$setting['port'] : 8080;
+
+        if (isset($setting['host'])) {
+            unset($setting['host']);
+        }
+
+        if (isset($setting['port'])) {
+            unset($setting['port']);
+        }
 
         if ($event->isHttp()) {
             define("PSCC_IN_HTTP", true);
@@ -53,7 +61,7 @@ class Bootstrap
             define("PSCC_IN_UDP", true);
             $server = new \Swoole\Server($host, $port, SWOOLE_PROCESS, SWOOLE_UDP);
         }
-        $server->set($this->conf->getSwoole());
+        $server->set($setting);
         $server->on("start", [$event, "onStart"]);
         $server->on("shutdown", [$event, "onShutdown"]);
         $server->on("workerStart", [$event, "onWorkerStart"]);

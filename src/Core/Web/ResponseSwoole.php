@@ -2,7 +2,9 @@
 
 namespace Rwcoding\Pscc\Core\Web;
 
-class ResponseSwoole
+use Rwcoding\Pscc\Core\ResponseInterface;
+
+class ResponseSwoole implements ResponseInterface
 {
     use ResponseTrait;
 
@@ -38,11 +40,16 @@ class ResponseSwoole
             }
         }
 
-        $ret = $this->body;
-        if (is_array($this->body)) {
-            $ret = json_encode($this->body, JSON_UNESCAPED_UNICODE);
-        } else if (is_object($this->body)) {
-            $ret = $this->body->__toString();
+        if ($this->render) {
+            $ret = call_user_func($this->render, $this->body);
+        } else {
+            if (is_array($this->body)) {
+                $ret = json_encode($this->body, JSON_UNESCAPED_UNICODE);
+            } else if (is_object($this->body)) {
+                $ret = $this->body->__toString();
+            } else {
+                $ret = $this->body;
+            }
         }
 
         $this->swooleResponse->end($ret);

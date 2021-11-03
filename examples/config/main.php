@@ -17,11 +17,19 @@ return [
 
         "router" => [
             "__construct" => [[
-                "help"      => ["\Rwcoding\Examples\Pscc\Apis\Help", "index"],
-                "user.list" => ["\Rwcoding\Examples\Pscc\Apis\User", "index"],
-                "user.add"  => ["\Rwcoding\Examples\Pscc\Apis\User", "add"],
-                "user.edit" => ["\Rwcoding\Examples\Pscc\Apis\User", "edit"],
-                "user.del"  => ["\Rwcoding\Examples\Pscc\Apis\User", "del"],
+                "favicon.ico" => ["\Rwcoding\Examples\Pscc\Apis\Help", "ico"],
+                "__default__" => ["\Rwcoding\Examples\Pscc\Apis\Help", "index"],
+
+                "user.list"    => "\Rwcoding\Examples\Pscc\Apis\User\Lists",
+                "user.add"     => "\Rwcoding\Examples\Pscc\Apis\User\Add",
+                "user.edit"    => "\Rwcoding\Examples\Pscc\Apis\User\Edit",
+                "user.del"     => "\Rwcoding\Examples\Pscc\Apis\User\Del",
+                "user.restore" => "\Rwcoding\Examples\Pscc\Apis\User\Restore",
+
+                "blog.list" => "\Rwcoding\Examples\Pscc\Apis\Blog\Lists",
+                "blog.add"  => "\Rwcoding\Examples\Pscc\Apis\Blog\Add",
+                "blog.edit" => "\Rwcoding\Examples\Pscc\Apis\Blog\Edit",
+                "blog.del"  => "\Rwcoding\Examples\Pscc\Apis\Blog\Del",
             ]]
         ],
     ],

@@ -8,11 +8,10 @@ class WhoopsPlainTextHandler implements ExceptionHandlerInterface
     {
         $whoops = new \Whoops\Run;
         $whoops->sendHttpCode(404);
-//        $whoops->allowQuit(false);
-//        $whoops->writeToOutput(false);
+        $whoops->allowQuit(false);
+        $whoops->writeToOutput(false);
         $whoops->pushHandler(new \Whoops\Handler\PlainTextHandler());
-        $whoops->handleException($exception);
-        return null;
+        return $whoops->handleException($exception);
     }
 
     public function isBreak(): bool

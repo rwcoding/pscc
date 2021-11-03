@@ -1,14 +1,17 @@
 <?php
 namespace Rwcoding\Examples\Pscc\Models;
 
+use Illuminate\Container\Container;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Capsule\Manager;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Facades\DB;
 use Rwcoding\Pscc\Di;
 use Illuminate\Database\Connection;
 
 /**
- * @mixin \Illuminate\Database\Query\Builder
+ * @mixin Builder
  */
 class Base extends Model
 {
@@ -16,9 +19,28 @@ class Base extends Model
 
     public function getConnection(): Connection
     {
+        return static::conn();
+    }
+
+    protected static function booted()
+    {
+        static::creating(function ($model) {
+            $model->created_at = time();
+            $model->updated_at = time();
+        });
+
+        static::updating(function ($model) {
+            $model->updated_at = time();
+        });
+
+    }
+
+    protected static function conn(): ?Connection
+    {
         if (self::$_connection) {
             return self::$_connection;
         }
+        static::setEventDispatcher(new Dispatcher(new Container()));
         $db = Di::my()->config->get("db");
         $manager = new Manager();
         $manager->addConnection([
@@ -33,6 +55,7 @@ class Base extends Model
         ]);
         $manager->setAsGlobal();
         $manager->bootEloquent();
+        // $manager->setEventDispatcher(new Dispatcher(new Container()));
         $connection = $manager->getConnection();
         self::$_connection = $connection;
 

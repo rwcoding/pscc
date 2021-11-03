@@ -3,12 +3,13 @@
 namespace Rwcoding\Examples\Pscc;
 
 use Illuminate\Support\Facades\DB;
+use Rwcoding\Pscc\Di;
 
-class Event
+class Hook
 {
     public static function over()
     {
-        if (DB::getFacadeRoot()) {
+        if (DB::getFacadeRoot() && Di::inConsole()) {
             foreach (DB::getQueryLog() as $log) {
                 echo "[query] ".$log["query"]."\n";
                 echo " [time] ".$log["time"]."\n";

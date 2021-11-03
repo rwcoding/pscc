@@ -2,10 +2,13 @@
 
 namespace Rwcoding\Pscc\Core\Console;
 
-class ConsoleResponse
+use Rwcoding\Pscc\Core\ResponseInterface;
+
+class ConsoleResponse implements ResponseInterface
 {
     private $body = null;
-    private $render = null;
+
+    private ?\Closure $render = null;
 
     public function setRender($render): self
     {
@@ -26,7 +29,7 @@ class ConsoleResponse
     public function send()
     {
         if ($this->render) {
-            call_user_func($this->render, $this->body);
+            echo call_user_func($this->render, $this->body);
             return;
         }
         if (is_array($this->body)) {

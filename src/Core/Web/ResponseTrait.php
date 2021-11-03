@@ -18,10 +18,23 @@ trait ResponseTrait
 
     protected int $status = 0;
 
+    private ?\Closure $render = null;
+
+    public function setRender($render): self
+    {
+        $this->render = $render;
+        return $this;
+    }
+
     public function addHeader(string $name, $data): self
     {
         $this->headers[$name] = $data;
         return $this;
+    }
+
+    public function hasHeader(string $name): bool
+    {
+        return isset($this->headers[$name]);
     }
 
     public function removeHeader(string $name): self
@@ -34,11 +47,13 @@ trait ResponseTrait
 
     public function setBody($body): self
     {
-        if (is_object($body) && !method_exists($body, '__toString')) {
-            throw new RuntimeException(Lang::t("response-body-type"));
-        }
         $this->body = $body;
         return $this;
+    }
+
+    public function getBody()
+    {
+        return $this->body;
     }
 
     public function addCookie(string $name, array $data): self

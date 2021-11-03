@@ -28,13 +28,13 @@ class Router
 
     public function setDefaultRoute($obj): self
     {
-        $this->routes["__default_"] = $obj;
+        $this->routes["__default__"] = $obj;
         return $this;
     }
 
     public function getDefaultRoute()
     {
-        return $this->routes['__default_'] ?? null;
+        return $this->routes['__default__'] ?? null;
     }
 
     public function remove(string $path): self

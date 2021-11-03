@@ -21,17 +21,23 @@ class Application
             throw (new \RuntimeException(Lang::t("route-not-found",$context->getPathForRoute())));
         }
 
-        if (!is_array($cb) && is_callable($cb)) {
+        if (!is_array($cb) && !is_string($cb) && is_callable($cb)) {
             call_user_func($cb, $context);
             return;
         }
 
-        $class = $cb[0];
-        $method = $cb[1];
+        $method = "";
+        if (is_string($cb)) {
+            $object = new $cb($context);
+        } else {
+            $class = $cb[0];
+            $method = $cb[1] ?? '';
+            $object = new $class($context);
+        }
 
-        $object = new $class;
-        if ($object instanceof ControllerInterface) {
-            $object->setContext($context);
+        if ($object instanceof ApiInterface) {
+            $ret = $object->run();
+        } else if ($object instanceof ControllerInterface) {
             if (method_exists($object, 'beforeAction') && !$object->beforeAction($method)) {
                 $context->emitResponse();
                 return;
@@ -54,7 +60,8 @@ class Application
             }
             $ret = $object->$method($context, $cb[2]??null);
         }
-        if ($ret !== null) {
+
+        if ($ret !== null && !($ret instanceof ResponseInterface)) {
             $context->setResponseBody($ret);
         }
         $context->emitResponse();

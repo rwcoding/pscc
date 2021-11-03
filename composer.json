@@ -16,7 +16,8 @@
         "illuminate/translation": "^8.68",
         "illuminate/filesystem": "^8.68",
         "monolog/monolog": "^2.3",
-        "symfony/var-dumper": "^5.3"
+        "symfony/var-dumper": "^5.3",
+        "illuminate/events": "^8.69"
     },
 
     "require-dev": {

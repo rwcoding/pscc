@@ -8,5 +8,5 @@ interface ControllerInterface
      * @param Context|PathFinderInterface $context
      * @return mixed
      */
-    public function setContext($context);
+    public function __construct($context);
 }

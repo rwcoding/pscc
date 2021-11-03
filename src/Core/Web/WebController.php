@@ -24,8 +24,9 @@ class WebController extends Meta implements ControllerInterface
      */
     private $context = null;
 
-    public function setContext($context): void
+    public function __construct($context)
     {
+        // parent::__construct();
         if ($this->context) {
             return;
         }

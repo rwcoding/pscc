@@ -71,6 +71,11 @@ class Request implements PathFinderInterface
 
     public function getPathForRoute(): string
     {
+        return $this->getPathInfo();
+    }
+
+    public function getPathInfo(): string
+    {
         if (isset($_SERVER['PATH_INFO'])) {
             return $_SERVER['PATH_INFO'];
         }
@@ -80,11 +85,6 @@ class Request implements PathFinderInterface
             return substr($requestUri, 0, $pos);
         }
         return $requestUri;
-    }
-
-    public function getPathInfo(): string
-    {
-        return $this->getPathInfo();
     }
 
     public function getFullUrl(): string
