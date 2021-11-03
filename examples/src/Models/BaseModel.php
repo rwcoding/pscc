@@ -13,7 +13,7 @@ use Illuminate\Database\Connection;
 /**
  * @mixin Builder
  */
-class Base extends Model
+class BaseModel extends Model
 {
     private static ?Connection $_connection = null;
 
@@ -32,7 +32,6 @@ class Base extends Model
         static::updating(function ($model) {
             $model->updated_at = time();
         });
-
     }
 
     protected static function conn(): ?Connection

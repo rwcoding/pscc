@@ -3,7 +3,15 @@ namespace Rwcoding\Examples\Pscc\Models;
 
 use Rwcoding\Pscc\Core\Db\SoftDeletesZero;
 
-class BlogModel extends Base
+/**
+ * @property int $id
+ * @property string $title
+ * @property string $content
+ * @property int $created_at
+ * @property int $updated_at
+ * @property int $deleted_at
+ */
+class BlogModel extends BaseModel
 {
     use SoftDeletesZero;
     public $timestamps = false;
