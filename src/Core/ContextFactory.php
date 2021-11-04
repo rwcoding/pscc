@@ -8,6 +8,7 @@ use Rwcoding\Pscc\Core\Web\Request;
 use Rwcoding\Pscc\Core\Web\RequestSwoole;
 use Rwcoding\Pscc\Core\Web\Response;
 use Rwcoding\Pscc\Core\Web\ResponseSwoole;
+use Rwcoding\Pscc\Task\TaskRequest;
 
 class ContextFactory
 {
