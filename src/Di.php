@@ -7,6 +7,7 @@ use Rwcoding\Pscc\Core\Application;
 use Rwcoding\Pscc\Core\Context;
 use Rwcoding\Pscc\Core\ContextFactory;
 use Rwcoding\Pscc\Core\Config;
+use Rwcoding\Pscc\Core\Logger;
 use Rwcoding\Pscc\Core\Router;
 use Rwcoding\Pscc\Exception\ExceptionHandle;
 use Rwcoding\Pscc\Lang\Lang;
@@ -23,6 +24,7 @@ use Illuminate\Translation\Translator;
  * @property Translator $translator
  * @property Validator $validator
  * @property \Swoole\Server|\Swoole\Http\Server $ss
+ * @property Logger $logger
  */
 class Di extends Container
 {
@@ -41,10 +43,10 @@ class Di extends Container
      */
     public function context(): Context
     {
-        if (PHP_SAPI === 'cli') {
-            return ContextFactory::newConsoleContext();
+        if (self::inCli()) {
+            return ContextFactory::consoleContext();
         }
-        return ContextFactory::newWebContext();
+        return ContextFactory::webContext();
     }
 
     public function __construct()
@@ -57,6 +59,7 @@ class Di extends Container
             'app'       => "\Rwcoding\Pscc\Core\Application",
             'console'   => "\Rwcoding\Pscc\Util\ConsoleUtil",
             'event'     => "\Rwcoding\Pscc\Core\Event",
+            'logger'    => "\Rwcoding\Pscc\Core\Logger",
             'validator' => function() {
                 return new Validator($this->translator);
             },
@@ -89,12 +92,26 @@ class Di extends Container
         }
 
         if (!empty($data['components'])) {
-            foreach ($data['components'] as $key=>$value) {
-                if (!$this->hasObject($key) &&
-                    $this->hasDefinition($key) &&
-                    is_array($value) &&
-                    empty($value['__class'])) {
-                    $value['__class'] = $this->getDefinition($key);
+            foreach ($data['components'] as $key => $value) {
+                if ($value instanceof \Closure) {
+                    $this->set($key, $value);
+                    continue;
+                }
+                if ($this->has($key)) {
+                    $old = $this->getDefinition($key);
+                    if ($old instanceof \Closure) {
+                        $this->set($key, $value);
+                        continue;
+                    }
+                    if (is_string($old)) {
+                        $old = ['__class'=>$old];
+                    }
+                    if (is_array($value)) {
+                        $value = array_merge($old, $value);
+                    }
+                    if (is_string($value)) {
+                        $value = array_merge($old, ['__class'=>$value]);
+                    }
                 }
                 $this->set($key, $value);
             }

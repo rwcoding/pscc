@@ -6,6 +6,8 @@ return [
     'event-no-id' => '无法确认事件id',
     'response-body-type' => '响应数据必须是 string 或实现 __toString 方法',
 
+    'logger-param-file' => '日志组件需要配置存储文件',
+
     'view-render-repeat' => '不能重复渲染视图 {0}',
     'view-not-found' => '找不到视图文件 {0}',
     'view-widget-implement-run' => 'widget需要实现run方法',

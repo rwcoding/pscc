@@ -55,6 +55,9 @@ class ApiContext extends Context
             $this->response->send();
         } else {
             $this->response->setRender(function ($body) {
+                if (is_string($body)) {
+                    return $body;
+                }
                 $text  = str_repeat("·",100)."\n";
                 $text .= "[command] ".$this->command."\n";
                 $text .= "   [data] ".json_encode($this->data, JSON_UNESCAPED_UNICODE)."\n";

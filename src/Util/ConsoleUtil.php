@@ -14,10 +14,7 @@ class ConsoleUtil
 
     public function __construct()
     {
-        list($script, $flags, $commands) = $this->parse($_SERVER['argv']);
-        $this->script = $script;
-        $this->flags = $flags;
-        $this->commands = $commands;
+        list($this->script, $this->flags, $this->commands) = $this->parse($_SERVER['argv']);
     }
 
     public function parse(array $argv): array

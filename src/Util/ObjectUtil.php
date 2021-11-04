@@ -52,12 +52,21 @@ class ObjectUtil
             $obj = new $class;
         }
 
+        $boot = null;
         foreach ($config as $pro => $value) {
+            if ($pro == "_boot") {
+                $boot = $value;
+                continue;
+            }
             if (is_array($value) && isset($value['__class'])) {
                 $obj->$pro = self::createByArray($value);
             } else {
                 $obj->$pro = $value;
             }
+        }
+
+        if ($boot) {
+            $boot($obj);
         }
 
         if (method_exists($obj, 'init')) {

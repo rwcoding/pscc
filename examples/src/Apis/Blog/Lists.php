@@ -1,6 +1,7 @@
 <?php
 namespace Rwcoding\Examples\Pscc\Apis\Blog;
 
+use Illuminate\Support\Arr;
 use Rwcoding\Examples\Pscc\ApiBase;
 use Rwcoding\Examples\Pscc\Models\BlogModel;
 
@@ -22,8 +23,9 @@ class Lists extends ApiBase
         $size = $data['size'] ?? 10;
 
         $blogs = BlogModel::orderBy("id")->skip(($page-1)*$size)->take($size)->get();
-
         $total = BlogModel::count();
+
+        print_r(Arr::pluck([['id'=>1,'title'=>'tt1'],['id'=>5,'title'=>'ttx'],], 'title', 'id'));
 
         return $this->success(["blogs"=>$blogs, "total"=>$total]);
     }

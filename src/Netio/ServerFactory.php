@@ -1,42 +1,15 @@
 <?php
-namespace Rwcoding\Pscc;
+namespace Rwcoding\Pscc\Netio;
 
-use Rwcoding\Pscc\Core\Config;
-use Rwcoding\Pscc\Util\ConsoleUtil;
-use Rwcoding\Pscc\Netio\EventInterface;
+use Rwcoding\Pscc\Di;
 
-/**
- * @property Config $conf
- * @property ConsoleUtil $console
- * @property \Swoole\Server|\Swoole\Http\Server|\Swoole\WebSocket\Server $server
- */
-class Bootstrap
+class ServerFactory
 {
-    private Config $conf;
-    private ConsoleUtil $console;
-    private $server;
-
-    public function __construct()
-    {
-        $this->console = new ConsoleUtil();
-        $this->conf = new Config($this->console->getString("conf"));
-    }
-
-    public function __get(string $name)
-    {
-        return $this->$name;
-    }
-
-    public function run()
-    {
-        $this->server->start();
-    }
-
-    public function register(EventInterface $event)
+    public static function register(EventInterface $event)
     {
         define("PSCC_IN_SWOOLE", true);
         define("PSCC_IN_SERVER", true);
-        $setting = $this->conf->getSwoole();
+        $setting = Di::my()->config->getSwoole();
         $host = !empty($setting['host']) ? $setting['host'] : "127.0.0.1";
         $port = !empty($setting['port']) ? (int)$setting['port'] : 8080;
 
@@ -100,11 +73,6 @@ class Bootstrap
             $server->on("disconnect", [$event, "onDisconnect"]);
         }
 
-        return $this->server = $server;
-    }
-
-    public function getServer()
-    {
-        return $this->server;
+        return $server;
     }
 }

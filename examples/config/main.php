@@ -6,31 +6,33 @@ return [
 
     "components" => [
         "config" => [
-            "__construct" => [ __DIR__."/../pscc.ini" ]
+            "file" => __DIR__."/../pscc.ini"
         ],
 
-        "app" => [
-            "__construct" => [[
-                "app" => "My Blog"
-            ]]
+        "logger" => [
+            "file" => __DIR__."/../../tmp/app.log",
+            "dateTimezone" => "PRC",
         ],
 
         "router" => [
-            "__construct" => [[
-                "favicon.ico" => ["\Rwcoding\Examples\Pscc\Apis\Help", "ico"],
-                "__default__" => ["\Rwcoding\Examples\Pscc\Apis\Help", "index"],
+            "_boot" => function($my){
+                $my->add([
+                    "favicon.ico" => ["\Rwcoding\Examples\Pscc\Apis\Help", "ico"],
+                    "__default__" => ["\Rwcoding\Examples\Pscc\Apis\Help", "index"],
+                    "test" => ["\Rwcoding\Examples\Pscc\Apis\Help", "test"],
 
-                "user.list"    => "\Rwcoding\Examples\Pscc\Apis\User\Lists",
-                "user.add"     => "\Rwcoding\Examples\Pscc\Apis\User\Add",
-                "user.edit"    => "\Rwcoding\Examples\Pscc\Apis\User\Edit",
-                "user.del"     => "\Rwcoding\Examples\Pscc\Apis\User\Del",
-                "user.restore" => "\Rwcoding\Examples\Pscc\Apis\User\Restore",
+                    "user.list"    => "\Rwcoding\Examples\Pscc\Apis\User\Lists",
+                    "user.add"     => "\Rwcoding\Examples\Pscc\Apis\User\Add",
+                    "user.edit"    => "\Rwcoding\Examples\Pscc\Apis\User\Edit",
+                    "user.del"     => "\Rwcoding\Examples\Pscc\Apis\User\Del",
+                    "user.restore" => "\Rwcoding\Examples\Pscc\Apis\User\Restore",
 
-                "blog.list" => "\Rwcoding\Examples\Pscc\Apis\Blog\Lists",
-                "blog.add"  => "\Rwcoding\Examples\Pscc\Apis\Blog\Add",
-                "blog.edit" => "\Rwcoding\Examples\Pscc\Apis\Blog\Edit",
-                "blog.del"  => "\Rwcoding\Examples\Pscc\Apis\Blog\Del",
-            ]]
+                    "blog.list" => "\Rwcoding\Examples\Pscc\Apis\Blog\Lists",
+                    "blog.add"  => "\Rwcoding\Examples\Pscc\Apis\Blog\Add",
+                    "blog.edit" => "\Rwcoding\Examples\Pscc\Apis\Blog\Edit",
+                    "blog.del"  => "\Rwcoding\Examples\Pscc\Apis\Blog\Del",
+                ]);
+            }
         ],
     ],
 ];

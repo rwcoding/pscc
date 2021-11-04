@@ -2,9 +2,9 @@
 
 use Rwcoding\Pscc\Netio\Http;
 use Rwcoding\Pscc\Netio\EventInterface;
+use Rwcoding\Pscc\Netio\ServerFactory;
 use Swoole\Http\Request;
 use Swoole\Http\Response;
-use Rwcoding\Pscc\Bootstrap;
 use Rwcoding\Pscc\Di;
 use Rwcoding\Pscc\Exception\WhoopsPrettyPageHandler;
 use Swoole\Server;
@@ -13,10 +13,9 @@ use Rwcoding\Examples\Pscc\ApiContext;
 use Rwcoding\Examples\Pscc\Hook;
 
 require __DIR__."/../vendor/autoload.php";
+Di::my()->init(require __DIR__."/config/main.php");
 
-$s = new Bootstrap();
-$s->register(new class extends Http implements EventInterface {
-
+ServerFactory::register(new class extends Http implements EventInterface {
     public function onWorkerStart(Server $server, int $workerId)
     {
         $di = Di::my();
@@ -36,5 +35,4 @@ $s->register(new class extends Http implements EventInterface {
             $response->end($di->exception->getResult(true)[0]);
         }
     }
-});
-$s->run();
+})->start();

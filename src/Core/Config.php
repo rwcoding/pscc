@@ -2,22 +2,15 @@
 
 namespace Rwcoding\Pscc\Core;
 
-use Error;
-
 class Config
 {
     private array $config = [];
 
-    /**
-     * @param array|string $file
-     * @throws Error
-     */
-    public function __construct($file)
+    public string $file = "";
+
+    public function init()
     {
-        if (is_array($file)) {
-            $this->config = $file;
-            return;
-        }
+        $file = $this->file;
         if (!$file) {
             $file = getcwd()."/pscc.ini";
             if (!file_exists($file)) {

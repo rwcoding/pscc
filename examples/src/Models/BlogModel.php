@@ -5,6 +5,7 @@ use Rwcoding\Pscc\Core\Db\SoftDeletesZero;
 
 /**
  * @property int $id
+ * @property int $user_id
  * @property string $title
  * @property string $content
  * @property int $created_at

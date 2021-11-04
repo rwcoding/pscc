@@ -9,9 +9,8 @@ class Application
 {
     private array $params = [];
 
-    public function __construct(array $params = [])
+    public function init()
     {
-        $this->params = $params;
     }
 
     public function run(Context $context)
