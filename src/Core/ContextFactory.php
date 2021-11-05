@@ -9,6 +9,7 @@ use Rwcoding\Pscc\Core\Web\RequestSwoole;
 use Rwcoding\Pscc\Core\Web\Response;
 use Rwcoding\Pscc\Core\Web\ResponseSwoole;
 use Rwcoding\Pscc\Task\TaskRequest;
+use Rwcoding\Pscc\Task\TaskResponse;
 
 class ContextFactory
 {
@@ -34,5 +35,13 @@ class ContextFactory
             return new $class(new RequestSwoole($request), new ResponseSwoole($response));
         }
         return new Context(new RequestSwoole($request), new ResponseSwoole($response));
+    }
+
+    public static function taskContext(array $task, string $class = ""): Context
+    {
+        if ($class) {
+            return new $class(new TaskRequest($task), new TaskResponse());
+        }
+        return new Context(new TaskRequest($task), new TaskResponse());
     }
 }

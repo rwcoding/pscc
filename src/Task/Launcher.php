@@ -12,7 +12,7 @@ use Swoole\Timer;
 use Swoole\Event;
 
 /**
- * [ [ "tick"=>10, "route"=>"user.add", "count"=>-1, "start"=>"5:00", "end"=>"7:00" ]]
+ * [ [ "tick"=>10, "route"=>"user.add", "day_scope"=>"0:00~5:00", "scope"=>"2021-10-10~2021-12-12", "workers"=>function($id){return $id>1;} ]]
  */
 class Launcher
 {
@@ -53,6 +53,7 @@ class Launcher
         for ($i = 0; $i < $this->workerNum; $i++) {
             $pm->add(function (Pool $pool, int $workerId) {
                 $di = Di::my();
+                $di->app->params['worker_id'] = $workerId;
                 $di->exception->addHandler(new WhoopsPlainTextHandler());
                 if ($this->configFile) {
                     $di->init(require $this->configFile);
@@ -93,35 +94,15 @@ class Launcher
         $pm->start();
     }
 
-    public function runTask(array $tasks)
+    public function runTask(array $taskList)
     {
         $di = Di::my();
-        foreach ($tasks as $task) {
+        foreach ($taskList as $task) {
             try {
                 $request = new TaskRequest($task);
-                if (!$request->canRun()) {
+                if (!$request->canRun($this->table)) {
                     continue;
                 }
-
-                $route = $request->route;
-                $count = (int)$this->table->get($route, "count");
-                if ($count >= $request->count && $request->count >= 0) {
-                    continue;
-                }
-
-                $ymd = date("Ymd");
-                $countDay = 1;
-                if ($day = $this->table->get($route, "count_day")) {
-                    $d = json_decode($day, true);
-                    if (!empty($d[$ymd])) {
-                        if ($d[$ymd] >= $request->dayCount && $request->dayCount >= 0) {
-                            continue;
-                        }
-                        $countDay = $d[$ymd] + 1;
-                    }
-                }
-                $this->table->set($route, ["count_day" => json_encode([$ymd => $countDay]), "count"=>$count+1]);
-
                 $di->app->run(new Context($request, new TaskResponse()));
             } catch (\Throwable $e) {
                 $di->exception->handle($e);

@@ -20,7 +20,7 @@ username = root
 password = root
 ```
 
-### Swoole 下允许
+### Swoole 下运行
 ```shell
 php swoole.php
 ```

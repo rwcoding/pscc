@@ -7,7 +7,7 @@ use Rwcoding\Pscc\Lang\Lang;
 
 class Application
 {
-    private array $params = [];
+    public array $params = [];
 
     public function init()
     {

@@ -12,6 +12,7 @@
     "require": {
         "ext-json": "*",
         "filp/whoops": "^2.14",
+        "illuminate/support": "^8.69",
         "illuminate/validation": "^8.68",
         "illuminate/translation": "^8.68",
         "illuminate/filesystem": "^8.68",
